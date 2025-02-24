@@ -1,6 +1,6 @@
 import React from 'react';
-import Radio from './Form/Radios';
- 
+import Radio from './Form/Radio';
+
 const perguntas = [
   {
     pergunta: 'Qual método é utilizado para criar componentes?',
@@ -37,60 +37,53 @@ const perguntas = [
 ];
 
 const App = () => {
-  const [respostas, setRespostas] = React.useState({});
-  const [perguntaAtual, setPerguntaAtual] = React.useState(0);
+  const [respostas, setRespostas] = React.useState({
+    p1: '',
+    p2: '',
+    p3: '',
+    p4: '',
+  });
+
+  const [slide, setSlide] = React.useState(0);
   const [resultado, setResultado] = React.useState(null);
 
-  function handleChange({ target }) {
-    setRespostas((prevRespostas) => ({
-      ...prevRespostas,
-      [target.name]: target.value,
-    }));
-  }
+  const handleChange = ({ target }) => {
+    setRespostas({ ...respostas, [target.id]: target.value });
+  };
 
-  function handleNext() {
-    if (perguntaAtual < perguntas.length - 1) {
-      setPerguntaAtual(perguntaAtual + 1);
-    } else {
-      verificarRespostas();
-    }
-  }
-
-  function verificarRespostas() {
+  function resultadoFinal() {
     const corretas = perguntas.filter(
-      ({ id, resposta }) => respostas[id] === resposta
+      ({ id, resposta }) => respostas[id] === resposta,
     );
-    setResultado(`Você acertou ${corretas.length} de ${perguntas.length}!`);
+    setResultado(`Você acertou: ${corretas.length} de ${perguntas.length}`);
   }
+
+  const handleClick = () => {
+    if (slide < perguntas.length - 1) {
+      setSlide(slide + 1);
+    } else {
+      setSlide(slide + 1);
+      resultadoFinal();
+    }
+  };
 
   return (
-    <div>
+    <form onSubmit={(event) => event.preventDefault()}>
+      {perguntas.map((pergunta, index) => (
+        <Radio
+          active={slide === index}
+          key={pergunta.id}
+          onChange={handleChange}
+          value={respostas[pergunta.id]}
+          {...pergunta}
+        />
+      ))}
       {resultado ? (
         <p>{resultado}</p>
       ) : (
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            verificarRespostas();
-          }}
-        >
-          <Radio
-            pergunta={perguntas[perguntaAtual].pergunta}
-            options={perguntas[perguntaAtual].options}
-            id={perguntas[perguntaAtual].id}
-            value={respostas[perguntas[perguntaAtual].id]}
-            onChange={handleChange}
-          />
-          {perguntaAtual < perguntas.length - 1 ? (
-            <button type="button" onClick={handleNext}>
-              Próxima
-            </button>
-          ) : (
-            <button type="submit">Verificar respostas</button>
-          )}
-        </form>
+        <button onClick={handleClick}>Próxima</button>
       )}
-    </div>
+    </form>
   );
 };
 
