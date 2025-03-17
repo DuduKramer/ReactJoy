@@ -1,22 +1,22 @@
-.contato{
+.contato {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 
-.dados{
+.dados {
   padding: 0px;
   list-style: none;
 }
 
-.contato li{
+.dados li {
   font-size: 1.2rem;
   font-family: Arial, Helvetica, sans-serif;
-  margin-bottom: 0.8 rem;
+  margin-bottom: 0.8rem;
 }
 
-.dados li::before{
-  content: "";
+.dados li::before {
+  content: '';
   display: inline-block;
   width: 20px;
   height: 2px;
